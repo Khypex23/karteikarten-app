@@ -2,7 +2,8 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Karteikarten Programm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karteikarten</title>
 
     <!-- MathJax -->
     <script>
@@ -12,177 +13,40 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-        }
-
-        .container {
-            display: flex;
-            height: 100vh;
-        }
-
-        .sidebar, .subcategories, .questions, .content {
-            padding: 15px;
-            border-right: 1px solid #ccc;
-            overflow-y: auto;
-        }
-
-        .sidebar { width: 20%; background: #f2f2f2; }
-        .subcategories { width: 20%; background: #f9f9f9; }
-        .questions { width: 30%; background: #ffffff; }
-        .content { width: 30%; }
-
-        button {
-            margin-top: 10px;
-            padding: 5px 10px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .topbar {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="topbar">
-    <button onclick="startLearning()">Start</button>
-</div>
+    <!-- Hauptscreen -->
+    <div id="mainScreen">
+        <div class="centerBox" onclick="openCategoryModal()">
+            <h2 id="selectedCategory">Kategorie wählen</h2>
+        </div>
 
-<div class="container">
-
-    <!-- Kategorien -->
-    <div class="sidebar">
-        <h3>Kategorien</h3>
-        <div onclick="selectCategory('arabisch')">Arabische Vokabeln</div>
-        <div onclick="selectCategory('ml')">Machine Learning</div>
+        <button id="startButton" class="hidden" onclick="startLearning()">
+            Start
+        </button>
     </div>
 
-    <!-- Unterkategorien -->
-    <div class="subcategories" id="subcategories">
-        <h3>Unterkategorien</h3>
+    <!-- Kategorie-Auswahl Fenster -->
+    <div id="categoryModal" class="modal hidden">
+        <div class="modalHeader">
+            <span>Kategorien</span>
+            <span class="closeBtn" onclick="closeCategoryModal()">✖</span>
+        </div>
+        <div id="categoryList"></div>
     </div>
 
-    <!-- Fragenliste -->
-    <div class="questions" id="questions">
-        <h3>Fragen</h3>
-    </div>
+    <!-- Lernscreen -->
+    <div id="learningScreen" class="hidden">
+        <h2 id="questionText"></h2>
 
-    <!-- Lernbereich -->
-    <div class="content hidden" id="learningArea">
-        <h3 id="learningQuestion"></h3>
         <button onclick="showAnswer()">Antwort anzeigen</button>
-        <p id="learningAnswer" class="hidden"></p>
+        <p id="answerText" class="hidden"></p>
+
         <button onclick="nextQuestion()">Nächste Frage</button>
     </div>
 
-</div>
-
-<script>
-
-const data = {
-    ml: {
-        "Bayes Decision Theory": [
-            {
-                question: "Was ist eine posterior probability?",
-                answer: "Die posterior probability ist $P(\\omega_i | x)$."
-            },
-            {
-                question: "Wie lautet das Bayes Theorem?",
-                answer: "$$P(\\omega_i | x) = \\frac{P(x|\\omega_i) P(\\omega_i)}{P(x)}$$"
-            }
-        ],
-        "Neural Networks": [
-            {
-                question: "Was ist ein Perzeptron?",
-                answer: "Ein lineares Klassifikationsmodell."
-            }
-        ]
-    },
-    arabisch: {
-        "Grundwortschatz": [
-            {
-                question: "Was bedeutet كتاب (kitab)?",
-                answer: "Es bedeutet 'Buch'."
-            }
-        ]
-    }
-};
-
-let currentCategory = null;
-let currentSubcategory = null;
-let currentQuestions = [];
-let currentIndex = 0;
-
-function selectCategory(category) {
-    currentCategory = category;
-    const subDiv = document.getElementById("subcategories");
-    subDiv.innerHTML = "<h3>Unterkategorien</h3>";
-
-    for (let sub in data[category]) {
-        const div = document.createElement("div");
-        div.textContent = sub;
-        div.onclick = () => selectSubcategory(sub);
-        subDiv.appendChild(div);
-    }
-
-    document.getElementById("questions").innerHTML = "<h3>Fragen</h3>";
-}
-
-function selectSubcategory(sub) {
-    currentSubcategory = sub;
-    currentQuestions = data[currentCategory][sub];
-    const qDiv = document.getElementById("questions");
-    qDiv.innerHTML = "<h3>Fragen</h3>";
-
-    currentQuestions.forEach(q => {
-        const div = document.createElement("div");
-        div.textContent = q.question;
-        qDiv.appendChild(div);
-    });
-}
-
-function startLearning() {
-    if (!currentQuestions.length) return;
-
-    currentIndex = 0;
-
-    document.getElementById("questions").classList.add("hidden");
-    document.getElementById("learningArea").classList.remove("hidden");
-
-    showCurrentQuestion();
-}
-
-function showCurrentQuestion() {
-    const q = currentQuestions[currentIndex];
-    document.getElementById("learningQuestion").textContent = q.question;
-    document.getElementById("learningAnswer").textContent = q.answer;
-    document.getElementById("learningAnswer").classList.add("hidden");
-    MathJax.typeset();
-}
-
-function showAnswer() {
-    document.getElementById("learningAnswer").classList.remove("hidden");
-    MathJax.typeset();
-}
-
-function nextQuestion() {
-    currentIndex++;
-    if (currentIndex >= currentQuestions.length) {
-        alert("Fertig!");
-        currentIndex = 0;
-    }
-    showCurrentQuestion();
-}
-
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
