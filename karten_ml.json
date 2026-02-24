@@ -1,0 +1,20 @@
+{
+    "ml": {
+        "Bayes Decision Theory": [
+            {
+                "question": "Was ist eine posterior probability?",
+                "answer": "Die posterior probability ist $P(\\omega_i | x)$ – also die Wahrscheinlichkeit für Klasse $\\omega_i$ gegeben die Beobachtung $x$."
+            },
+            {
+                "question": "Wie lautet das Bayes-Theorem?",
+                "answer": "$$P(\\omega_i | x) = \\frac{P(x|\\omega_i) P(\\omega_i)}{P(x)}$$"
+            }
+        ],
+        "Linear Discriminants": [
+            {
+                "question": "Was ist ein linearer Diskriminator?",
+                "answer": "Ein Modell der Form $g(x) = w^T x + w_0$, das Klassen durch eine lineare Entscheidungsgrenze trennt."
+            }
+        ]
+    }
+}
